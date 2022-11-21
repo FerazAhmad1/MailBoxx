@@ -55,8 +55,7 @@ const Login = () => {
               InputEmail.current.value =
               InputPassword.current.value =
                 "";
-
-            navigate("/Verifyemail");
+            console.log("signup successfully");
           }
         } catch (error) {
           console.log(error.message);
@@ -82,7 +81,7 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-          navigate("/verifyemail");
+          navigate("/welcome");
           localStorage.setItem("email", email);
           localStorage.setItem("token", data.idToken);
           dispatch(loginMethod(data.idToken));
