@@ -1,3 +1,12 @@
+*{
+  margin: 0;
+  padding: 0;
+  
+}
+
+
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,3 +20,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* .mailInbox__container{
+  position: relative;
+}
+.Editor__container {
+  position: absolute;
+  top: 0;
+  right: 0;
+} */

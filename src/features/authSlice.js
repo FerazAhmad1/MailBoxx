@@ -12,8 +12,10 @@ const authSlice = createSlice({
   reducers: {
     loginMethod: (state, action) => {
       console.log(action);
-      state.token = action.payload;
+      state.token = action.payload.token;
+      state.email = action.payload.email;
       state.isLoggedin = !!state.token;
+      console.log(action);
     },
 
     logoutMethod: (state, action) => {

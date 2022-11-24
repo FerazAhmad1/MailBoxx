@@ -1,0 +1,37 @@
+.sidebar {
+    width: 15%;
+    background-color: rgb(243, 242, 242);
+    
+    height: 100vh;
+}
+.sidebar__list {
+   padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: fit-content;
+   
+}
+.sidebar__Compose__button{
+    color: white;
+   padding: 10px;
+    border:none;
+    text-align: center;
+    font-size: large;
+    background-color: rgb(149, 200, 245);
+}
+
+.sidebar__unordered__list {
+   list-style: none;
+   
+}
+.sidebar__unordered__list li {
+    padding: 10px;
+}
+.sidebar__unordered__list li:hover {
+    border-left:2px solid blue ;
+    background-color: #aabffc;
+    transition: ease-in-out;
+
+}

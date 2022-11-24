@@ -1,0 +1,25 @@
+
+.mailInbox__container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+    border: 1px solid red;
+}
+.mailInox__Container__foroneMail {
+    display: flex;
+    border: 1px solid green;
+    height: max-content;
+    padding: 10px;
+   
+    margin-bottom: 10px;
+}
+.mailSubject {
+    display: flex;
+    flex: 1;
+    margin-left: 100px;
+    width: 100%;
+}
+.mailInbox__container__prefixIcon {
+    display: flex;
+}

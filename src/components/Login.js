@@ -81,13 +81,10 @@ const Login = () => {
         const data = await response.json();
 
         if (response.ok) {
-          navigate("/welcome");
+          navigate("/Inbox");
           localStorage.setItem("email", email);
           localStorage.setItem("token", data.idToken);
-          dispatch(loginMethod(data.idToken));
-          console.log(email);
-          console.log(state);
-          dispatch(emailSetupMethod(email));
+          dispatch(loginMethod({ token: data.idToken, email: email }));
         }
       } catch (error) {
         console.log(error.message);
