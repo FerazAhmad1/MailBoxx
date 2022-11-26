@@ -30,6 +30,11 @@ const EmailSlice = createSlice({
     markRead: (state, action) => {
       state.Inboxmail[action.payload].read = true;
     },
+    deleteMail: (state, action) => {
+      state.Inboxmail = state.Inboxmail.filter(
+        (mail) => mail.id !== action.payload
+      );
+    },
   },
 });
 
@@ -42,4 +47,5 @@ export const {
   InboxHandler,
   composeHandler,
   markRead,
+  deleteMail,
 } = EmailSlice.actions;

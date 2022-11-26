@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { InboxHandler } from "../features/EmailSlice";
+import { deleteMail } from "../features/EmailSlice";
 import { loginMethod, emailSetupMethod } from "../features/authSlice";
 import EmailCompose from "./EmailCompose";
 import { Link } from "react-router-dom";
@@ -14,6 +15,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
 const MailInbox = () => {
+  const [deleteid, setdeleteId] = useState("");
   const authState = useSelector((state) => state.auth);
   const yourEmail = useSelector((state) => state.auth.email).replace(
     /[^a-zA-Z0-9]/g,
@@ -23,6 +25,17 @@ const MailInbox = () => {
   const allmail = useSelector((state) => state.email.Inboxmail);
   const composeState = useSelector((state) => state.email.composeState);
   const dispatch = useDispatch();
+  const deleteHandler = async (id) => {
+    const response = await axios.delete(
+      `https://mailbox-9dd04-default-rtdb.firebaseio.com/${yourEmail}/${id}.json`
+    );
+
+    if (response.statusText === "OK") {
+      dispatch(deleteMail(id));
+      console.log("i am inside of status text");
+      setdeleteId(id);
+    }
+  };
   useEffect(() => {
     console.log("i have call");
     if (!yourEmail) return;
@@ -30,9 +43,10 @@ const MailInbox = () => {
       const response = await axios.get(
         `https://mailbox-9dd04-default-rtdb.firebaseio.com/${yourEmail}.json`
       );
-      const data = response.data;
+
       console.log(yourEmail);
-      if (Object.keys(data)) {
+      if (response.statusText === "OK" && response.data) {
+        const data = response.data;
         const keyarr = Object.keys(data);
         const newdata = keyarr.map((key) => ({ ...data[key], id: key }));
         console.log(newdata);
@@ -40,7 +54,7 @@ const MailInbox = () => {
       }
     };
     getallmail();
-  }, [authState]);
+  }, [authState, deleteid]);
 
   useEffect(() => {
     dispatch(emailSetupMethod(localStorage.getItem("email")));
@@ -84,7 +98,12 @@ const MailInbox = () => {
 
             <div>
               <ArchiveIcon />
-              <DeleteOutlineIcon />
+              <button
+                onClick={(e) => {
+                  deleteHandler(mail.id);
+                }}>
+                <DeleteOutlineIcon />
+              </button>
             </div>
           </div>
         );
