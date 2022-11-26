@@ -7,10 +7,12 @@ import Header from "./components/Header";
 import SideBar from "./components/SideBar";
 import TextEditor from "./components/TextEditor";
 import MailInbox from "./components/MailInbox";
+import MessageDetail from "./components/MessageDetail";
 function App() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/mail/:mailId" element={<MessageDetail />}></Route>
         <Route path="/" element={<Login />} />
         <Route
           path="/Inbox"

@@ -13,47 +13,62 @@ const EmailCompose = () => {
   const [editorState, setEditorState] = useState();
   const subjectRef = useRef();
   const reciverRef = useRef();
-  const email = useSelector((state) => state.email);
+  const sentmails = useSelector((state) => state.email.sentmails);
 
-  const reciver = useSelector((state) => state.email.reciever).replace(
-    /[^a-zA-Z0-9]/g,
-    ""
-  );
   const sender = useSelector((state) => state.auth.email);
-  console.log(reciver);
+
   const dispatch = useDispatch();
-  const clickHandler = () => {
-    const dateAndTime = new Date().toLocaleString().split(" ");
-    dispatch(
-      sentMail({
-        subject: subjectRef.current.value,
-        reciever: reciverRef.current.value,
-        message: editorState,
-        sender: sender,
-        time: dateAndTime[1] + " " + dateAndTime[2],
-        date: dateAndTime[0],
-      })
+  const clickHandler = async () => {
+    const reciver = reciverRef.current.value.replace(/[^a-zA-Z0-9]/g, "");
+    console.log(reciver);
+    const date = new Date();
+    const month = date.getMonth();
+    const day = date.getDay();
+    const year = date.getFullYear();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+
+    const mailItem = {
+      subject: subjectRef.current.value,
+      reciever: reciverRef.current.value,
+      message: editorState,
+      sender: sender,
+      month,
+      day,
+      year,
+      hour,
+      minute,
+      second,
+      read: false,
+    };
+
+    const response = await fetch(
+      `https://mailbox-9dd04-default-rtdb.firebaseio.com/${reciver}.json`,
+      {
+        method: "POST",
+        body: JSON.stringify(mailItem),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
+    if (response.ok) {
+      const data = await response.json();
+      console.log(response, data);
+      dispatch(sentMail(mailItem));
+    }
   };
 
   useEffect(() => {
     const allsentemails = async () => {
-      const response = await fetch(
-        `https://mailbox-9dd04-default-rtdb.firebaseio.com/${reciver}.json`,
-        {
-          method: "POST",
-          body: JSON.stringify(email),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      axios.put(
+        "https://mailbox-9dd04-default-rtdb.firebaseio.com/sentmails.json",
+        sentmails
       );
-      if (response.ok) {
-        dispatch(allrcvHandler(reciver));
-      }
     };
     allsentemails();
-  }, [email]);
+  }, [sentmails]);
 
   // useEffect(() => {
   //   const identifire = setTimeout((event) => {

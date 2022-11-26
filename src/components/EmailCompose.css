@@ -49,6 +49,7 @@
    height: 200px;
     max-height: 200px !important;
     overflow: auto;
+    position: relative;
     
   }
   .public-DraftEditor-content::-webkit-scrollbar{
@@ -69,6 +70,9 @@
     flex: 1;
 }
 .senderbutton {
+    position :absolute;
+    right: 0;
+    bottom: 0;
     width: 100px;
     padding: 10px;
     background-color: blue;
@@ -76,4 +80,5 @@
     outline: none;
     color: white;
     border-radius: 5px;
+    z-index: 2000;
 }
