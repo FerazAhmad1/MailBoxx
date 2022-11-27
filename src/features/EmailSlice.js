@@ -11,7 +11,7 @@ const EmailSlice = createSlice({
   initialState,
   reducers: {
     sentMail: (state, action) => {
-      state.sentmails = [...state.sentmails, action.payload];
+      state.sentmails = action.payload;
     },
 
     allrcvHandler: (state, action) => {
@@ -35,6 +35,11 @@ const EmailSlice = createSlice({
         (mail) => mail.id !== action.payload
       );
     },
+    deleteSent: (state, action) => {
+      state.sentmails = state.sentmails.filter(
+        (mail) => mail.id !== action.payload
+      );
+    },
   },
 });
 
@@ -48,4 +53,5 @@ export const {
   composeHandler,
   markRead,
   deleteMail,
+  deleteSent,
 } = EmailSlice.actions;

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { InboxHandler } from "../features/EmailSlice";
-import { deleteMail } from "../features/EmailSlice";
-import { loginMethod, emailSetupMethod } from "../features/authSlice";
+import React from "react";
+import { useDispatch } from "react-redux";
+
 import EmailCompose from "./EmailCompose";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -14,57 +12,23 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
-const MailInbox = () => {
-  const [deleteid, setdeleteId] = useState("");
-  const authState = useSelector((state) => state.auth);
-  const yourEmail = useSelector((state) => state.auth.email).replace(
-    /[^a-zA-Z0-9]/g,
-    ""
-  );
-  const emailState = useSelector((state) => state.email);
-  const allmail = useSelector((state) => state.email.Inboxmail);
-  const composeState = useSelector((state) => state.email.composeState);
+const MailInbox = ({
+  allmail,
+  composeState,
+  url,
+  yourEmail,
+  deletefunction,
+}) => {
   const dispatch = useDispatch();
   const deleteHandler = async (id) => {
-    const response = await axios.delete(
-      `https://mailbox-9dd04-default-rtdb.firebaseio.com/${yourEmail}/${id}.json`
-    );
+    const response = await axios.delete(`${url}/${yourEmail}/${id}.json`);
 
     if (response.statusText === "OK") {
-      dispatch(deleteMail(id));
+      dispatch(deletefunction(id));
       console.log("i am inside of status text");
-      setdeleteId(id);
     }
   };
-  useEffect(() => {
-    console.log("i have call");
-    if (!yourEmail) return;
-    const getallmail = async () => {
-      const response = await axios.get(
-        `https://mailbox-9dd04-default-rtdb.firebaseio.com/${yourEmail}.json`
-      );
 
-      console.log(yourEmail);
-      if (response.statusText === "OK" && response.data) {
-        const data = response.data;
-        const keyarr = Object.keys(data);
-        const newdata = keyarr.map((key) => ({ ...data[key], id: key }));
-        console.log(newdata);
-        dispatch(InboxHandler(newdata));
-      }
-    };
-    getallmail();
-  }, [authState, deleteid]);
-
-  useEffect(() => {
-    dispatch(emailSetupMethod(localStorage.getItem("email")));
-    dispatch(
-      loginMethod({
-        token: localStorage.getItem("token"),
-        email: localStorage.getItem("email"),
-      })
-    );
-  }, []);
   console.log("i am mailInbox ");
   return (
     <div className="mailInbox__container">
@@ -78,7 +42,7 @@ const MailInbox = () => {
               <LabelImportantIcon />
             </div>
 
-            <Link to={`/mail/${mail.id}`}>
+            <Link to={`/mail/${mail.id}`} state={{ type: mail.mailType }}>
               <div className="mailList">
                 <div>
                   <p className="sender">

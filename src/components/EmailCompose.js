@@ -4,7 +4,11 @@ import { Editor, EditorState } from "react-draft-wysiwyg";
 
 import "draft-js/dist/Draft.css";
 import { useDispatch, useSelector } from "react-redux";
-import { sentMail, allrcvHandler } from "../features/EmailSlice";
+import {
+  sentMail,
+  allrcvHandler,
+  composeHandler,
+} from "../features/EmailSlice";
 import axios from "axios";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import TextEditor from "./TextEditor";
@@ -13,7 +17,13 @@ const EmailCompose = () => {
   const [editorState, setEditorState] = useState();
   const subjectRef = useRef();
   const reciverRef = useRef();
-  const sentmails = useSelector((state) => state.email.sentmails);
+  const composeState = useSelector((state) => state.email.composeState);
+  const yourEmail = useSelector((state) => state.auth.email).replace(
+    /[^a-zA-Z0-9]/g,
+    ""
+  );
+
+  console.log(yourEmail);
 
   const sender = useSelector((state) => state.auth.email);
 
@@ -41,6 +51,7 @@ const EmailCompose = () => {
       minute,
       second,
       read: false,
+      mailType: "rcv",
     };
 
     const response = await fetch(
@@ -55,20 +66,14 @@ const EmailCompose = () => {
     );
     if (response.ok) {
       const data = await response.json();
-      console.log(response, data);
-      dispatch(sentMail(mailItem));
-    }
-  };
-
-  useEffect(() => {
-    const allsentemails = async () => {
-      axios.put(
-        "https://mailbox-9dd04-default-rtdb.firebaseio.com/sentmails.json",
-        sentmails
+      axios.post(
+        `https://mailbox-9dd04-default-rtdb.firebaseio.com/sentmails/${yourEmail}.json`,
+        { ...mailItem, mailType: "sent", read: true }
       );
-    };
-    allsentemails();
-  }, [sentmails]);
+    }
+
+    dispatch(composeHandler());
+  };
 
   // useEffect(() => {
   //   const identifire = setTimeout((event) => {

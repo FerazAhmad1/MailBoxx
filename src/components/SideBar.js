@@ -3,6 +3,7 @@ import "./SideBar.css";
 import { useSelector, useDispatch } from "react-redux";
 import { composeHandler } from "../features/EmailSlice";
 import MailInbox from "./MailInbox";
+import { Link } from "react-router-dom";
 const SideBar = () => {
   const dispatch = useDispatch();
   const [unread, setUnread] = useState(0);
@@ -36,14 +37,18 @@ const SideBar = () => {
             {console.log("i have a call")}
           </div>
           <div className="sidebar__Inbox">
-            <button className="sidebar__Inbox__button">Inbox</button>
+            <Link to="/Inbox">
+              <button className="sidebar__Inbox__button">Inbox</button>
+            </Link>
           </div>
           <div className="sidebar__list__items__Container">
             <ul className="sidebar__unordered__list">
               <li className="sidebar__list__items__unread">Unread {unread} </li>
               <li className="sidebar__list__items__Starred">Starred</li>
               <li className="sidebar__list__items__Draft">Draft</li>
-              <li className="sidebar__list__items__Sent">Sent</li>
+              <Link to="/SentBox">
+                <li className="sidebar__list__items__Sent">Sent</li>
+              </Link>
               <li className="sidebar__list__items__Archiev">Archiev</li>
               <li className="sidebar__list__items__Spam">Spam</li>
               <li className="sidebar__list__items__deletedItems">

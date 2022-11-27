@@ -8,6 +8,8 @@ import SideBar from "./components/SideBar";
 import TextEditor from "./components/TextEditor";
 import MailInbox from "./components/MailInbox";
 import MessageDetail from "./components/MessageDetail";
+import InboxList from "./components/InboxList";
+import SentMailBox from "./components/SentMailBox";
 function App() {
   return (
     <div className="App">
@@ -21,7 +23,20 @@ function App() {
               <Header />
               <div className="app__page">
                 <SideBar />
-                <MailInbox />
+                <InboxList />
+              </div>
+            </>
+          }></Route>
+
+        <Route
+          path="/SentBox"
+          element={
+            <>
+              <Header />
+              <div className="app__page">
+                <SideBar />
+
+                <SentMailBox />
               </div>
             </>
           }></Route>

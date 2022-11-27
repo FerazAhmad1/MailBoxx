@@ -4,12 +4,14 @@ import { markRead } from "../features/EmailSlice";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import LabelImportantIcon from "@mui/icons-material/LabelImportant";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 
 const MessageDetail = () => {
-  console.log("before inbox mail");
+  const location = useLocation();
+  const type = location.state.type;
   const dispatch = useDispatch();
   const InboxMail = useSelector((state) => state.email.Inboxmail);
+  const sentboxMail = useSelector((state) => state.email.sentmails);
   console.log("after inbox mail");
   console.log(InboxMail);
   const { mailId } = useParams();
@@ -19,14 +21,19 @@ const MessageDetail = () => {
     ""
   );
   console.log(yourEmail);
-  const index = InboxMail.findIndex((mail) => mail.id === mailId);
-  const mail = InboxMail[index];
+  const Inboxindex = InboxMail.findIndex((mail) => mail.id === mailId);
+  const sentBoxindex = sentboxMail.findIndex((mail) => mail.id === mailId);
+  const mail =
+    type === "sent" ? sentboxMail[sentBoxindex] : InboxMail[Inboxindex];
+  console.log(mail, Inboxindex);
   useEffect(() => {
+    if (type === "sent") return;
     if (mail.read) return;
-    dispatch(markRead(index));
+    dispatch(markRead(Inboxindex));
   }, []);
 
   useEffect(() => {
+    if (type === "sent") return;
     if (mail.read) return;
     const updateData = async () => {
       const response = await axios.patch(
